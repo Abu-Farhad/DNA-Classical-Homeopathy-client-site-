@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-// import { AppContext } from '../context/AppContext'
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -8,12 +7,26 @@ export default function MyAppointments() {
   const { backendUrl, token } = useContext(AppContext);
 
   const [appointments, setAppointments] = useState([]);
-  const months=["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+  const months = [
+    "",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
-  const slotDateFormat=(slotDate)=>{
-    const dateArray=slotDate.split('_')
-    return dateArray[0]+" "+months[Number(dateArray[1])]+" "+dateArray[2]
-  }
+  const slotDateFormat = (slotDate) => {
+    const dateArray = slotDate.split("_");
+    return dateArray[0] + " " + months[Number(dateArray[1])] + " " + dateArray[2];
+  };
 
   const getUserAppointments = async () => {
     try {
@@ -22,32 +35,89 @@ export default function MyAppointments() {
       });
       if (data.success) {
         setAppointments(data.appointments);
-        console.log(data.appointments);
+        console.log("Appointments:", data.appointments);
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
-  const cancelAppointment=async(appointmentId)=>{
+  const cancelAppointment = async (appointmentId) => {
     try {
-      const {data}=await axios.post(backendUrl+'/api/user/cancel-appointment',{appointmentId},{headers:{token}})
-      if(data.success){
-        toast.success(data.message)
-        getUserAppointments()
-      }
-      else{
-        toast.error(data.message)
+      const { data } = await axios.post(
+        backendUrl + "/api/user/cancel-appointment",
+        { appointmentId },
+        { headers: { token } }
+      );
+      if (data.success) {
+        toast.success(data.message);
+        getUserAppointments();
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
-  }
+  };
+
+  const initPay = (order) => {
+  const options = {
+    key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+    amount: order.amount,
+    currency: order.currency,
+    name: "Appointment Payment",
+    description: "Appointment Payment",
+    order_id: order.id,
+    receipt: order.receipt,
+    handler: async (response) => {
+      console.log("Payment Success:", response);
+    },
+    // 👇 Add this block
+    method: {
+      upi: true,
+      card: true,
+      netbanking: true,
+      wallet: true,
+    },
+    // Optional: Pre-fill customer details
+    prefill: {
+      name: "Patient",
+      email: "test@example.com",
+      contact: "9999999999",
+    },
+    theme: {
+      color: "#3399cc",
+    },
+  };
+
+  const rzp = new window.Razorpay(options);
+  rzp.open();
+};
+
+
+  const appointRazorpay = async (appointmentId) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/user/payment-razorpay",
+        { appointmentId },
+        { headers: { token } }
+      );
+      if (data.success) {
+        initPay(data.order);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
 
   useEffect(() => {
-    getUserAppointments();
+    console.log("Token in MyAppointments:", token);
+    if (token) {
+      getUserAppointments();
+    }
   }, [token]);
 
   return (
@@ -58,8 +128,12 @@ export default function MyAppointments() {
       <div>
         {appointments.map((item, index) => (
           <div className="grid grid-cols-[1fr_3fr_1fr] mt-4" key={index}>
-            <div className="">
-              <img className="w-32 bg-indigo-50" src={item.docData.image} alt="" />
+            <div>
+              <img
+                className="w-32 bg-indigo-50"
+                src={item.docData.image}
+                alt="doctor"
+              />
             </div>
             <div className="flex flex-col flex-1 text-sm text-zinc-400">
               <p className="text-neutral-800 font-semibold">{item.docData.name}</p>
@@ -76,17 +150,34 @@ export default function MyAppointments() {
             </div>
 
             <div className="flex flex-col gap-2 justify-end">
-              {!item.cancelled && <button className="text-sm text-stone-500 text-center s:min-w-48 py-2 border rounded-lg hover:bg-blue-500 hover:text-white rounded-md transition-all duration-500">
-                Pay Online
-              </button>}
-              {!item.cancelled && <button onClick={()=>cancelAppointment(item._id)} className="text-sm text-stone-500 text-center s:min-w-48 py-2 border rounded-lg hover:bg-red-500 hover:text-white rounded-md transition-all duration-500">
-                Cancel Appointment
-              </button>}
-              {item.cancelled && <button className="sm:min-w-48 py-2 border border-red-500 rounded text-red-500">
-                Appointment Cancelled</button>}
+              {!item.cancelled && (
+                <button
+                  onClick={() => appointRazorpay(item._id)}
+                  className="text-sm text-stone-500 text-center s:min-w-48 py-2 border rounded-lg hover:bg-blue-500 hover:text-white transition-all duration-500"
+                >
+                  Pay Online
+                </button>
+              )}
+              {!item.cancelled && (
+                <button
+                  onClick={() => cancelAppointment(item._id)}
+                  className="text-sm text-stone-500 text-center s:min-w-48 py-2 border rounded-lg hover:bg-red-500 hover:text-white transition-all duration-500"
+                >
+                  Cancel Appointment
+                </button>
+              )}
+              {item.cancelled && (
+                <button className="sm:min-w-48 py-2 border border-red-500 rounded text-red-500">
+                  Appointment Cancelled
+                </button>
+              )}
             </div>
           </div>
         ))}
+
+        {appointments.length === 0 && (
+          <p className="text-center text-gray-500 mt-6">No appointments found.</p>
+        )}
       </div>
     </div>
   );
