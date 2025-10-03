@@ -56,11 +56,11 @@ export default function Appointment() {
 
       if (today.getDate() === currentDate.getDate()) {
         currentDate.setHours(
-          currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10
+          currentDate.getHours() > 5 ? currentDate.getHours() + 1 : 5
         );
         currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
       } else {
-        currentDate.setHours(10);
+        currentDate.setHours(5);
         currentDate.setMinutes(0);
       }
 

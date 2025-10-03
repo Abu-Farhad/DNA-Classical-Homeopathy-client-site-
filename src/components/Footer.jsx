@@ -37,7 +37,7 @@ export default function Footer() {
         </div>
         
       </div>
-      <div className="text-center">Copyright 2024@Prescripto - All Right Reserved</div>
+      <div className="text-center">Copyright 2024@DNA Classical Homeopathy - All Right Reserved</div>
     </div>
   );
 }

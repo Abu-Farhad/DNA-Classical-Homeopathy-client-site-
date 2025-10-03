@@ -5,7 +5,7 @@ export default function About() {
   return (
     <div>
       <div className="text-center text-2xl pt-10 text-gray-500">
-        <p className="text-gray-200 font-medium">
+        <p className="text-gray-500 font-medium">
           ABOUT <span>US</span>
         </p>
       </div>

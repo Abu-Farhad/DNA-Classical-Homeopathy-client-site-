@@ -15,7 +15,13 @@ export default function Navbar() {
   // const [token, setToken] = useState(true);
   return (
     <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400">
-      <img onClick={() => navigate("/")} src={assets.logo} alt="" />
+      <div className="flex gap-3 items-center">
+        <img className="h-[55px]" onClick={() => navigate("/")} src={assets.logo} alt="" />
+        <span>
+          <div className="font-bold text-2xl text-blue-800">DNA CLASSICAL</div>
+          <div className="font-bold text-3xl text-purple-950">Homeopathy</div>
+        </span>
+      </div>
       <ul className="hidden md:flex gap-3">
         <NavLink to={"/"}>
           <li className="py-1">HOME</li>
