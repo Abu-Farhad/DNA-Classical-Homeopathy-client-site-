@@ -19,7 +19,7 @@ export default function Navbar() {
         <img className="h-[55px]" onClick={() => navigate("/")} src={assets.logo} alt="" />
         <span>
           <div className="font-bold text-2xl text-blue-800">DNA CLASSICAL</div>
-          <div className="font-bold text-3xl text-purple-950">Homeopathy</div>
+          <div className="font-bold text-3xl text-purple-950">Homoeopathy</div>
         </span>
       </div>
       <ul className="hidden md:flex gap-3">
