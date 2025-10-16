@@ -30,8 +30,8 @@ export default function Footer() {
           <div>
             <p className="text-xl font-medium mb-5">Get IN Touch</p>
             <ul className="flex flex-col gap-2 text-gray-600">
-              <li>987968</li>
-              <li>email@gmail.com</li>
+              <li>9564530327</li>
+              <li>dr.dnacoachinginstitute@gmail.com</li>
             </ul>
           </div>
         </div>

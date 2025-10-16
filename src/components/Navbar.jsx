@@ -82,7 +82,7 @@ export default function Navbar() {
         <div
           className={`${
             showMenu ? "w-1/2" : "h-0 w-0"
-          } md:hodden right-0 top-0 absolute bottom-0 z-20 overflow-hidden bg-white transition-all`}
+          } md:hidden right-0 top-0 absolute bottom-0 z-20 overflow-hidden bg-white transition-all`}
         >
           <div className="flex items-center mt-3 justify-between">
             <img className="w-36" src={assets.logo} alt="" />

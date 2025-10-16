@@ -13,6 +13,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [phone,setPhone]=useState('')
 
   const { backendUrl, token, setToken } = useContext(AppContext);
 
@@ -24,6 +25,7 @@ export default function Login() {
           name,
           password,
           email,
+          phone
         });
         if (data.success) {
           localStorage.setItem("token", data.token);
@@ -69,7 +71,7 @@ export default function Login() {
           Please {state === "Sign Up" ? "Sign Up" : "Log in"} to book
           appointment
         </p>
-        {state === "Sign Up" && (
+        {state === "Sign Up" && (<>
           <div className="w-full">
             <p>Full Name</p>
             <input
@@ -81,6 +83,20 @@ export default function Login() {
               }}
             />
           </div>
+
+          <div className="w-full">
+            <p>Phone</p>
+            <input
+              className="border border-zinc-300 rounded w-full p-2 mt-1"
+              type="text"
+              value={phone}
+              onChange={(e) => {
+                setPhone(e.target.value);
+              }}
+            />
+          </div>
+</>
+          
         )}
         <div className="w-full">
           <p>Email</p>
