@@ -10,7 +10,7 @@ export default function Login() {
   const navigate=useNavigate()
   const [state, setState] = useState("Sign Up");
 
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [phone,setPhone]=useState('')
@@ -24,7 +24,7 @@ export default function Login() {
         const { data } = await axios.post(backendUrl + "/api/user/register", {
           name,
           password,
-          email,
+          
           phone
         });
         if (data.success) {
@@ -35,7 +35,7 @@ export default function Login() {
         }
       } else {
         const { data } =await axios.post(backendUrl+ "/api/user/login", {
-          email,
+          
           password,
         });
         if (data.success) {
@@ -98,17 +98,7 @@ export default function Login() {
 </>
           
         )}
-        <div className="w-full">
-          <p>Email</p>
-          <input
-            className="border border-zinc-300 rounded w-full p-2 mt-1"
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
-        </div>
+        
         <div className="w-full">
           <p>Password</p>
           <input
